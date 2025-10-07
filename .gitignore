@@ -1,0 +1,59 @@
+# Dependencies
+**/node_modules/
+
+# Production
+**/build/
+**/dist/
+
+# Mobile specific
+mobile/.expo/
+mobile/dist/
+mobile/web-build/
+mobile/*.orig.*
+mobile/*.jks
+mobile/*.p8
+mobile/*.p12
+mobile/*.key
+mobile/*.mobileprovision
+
+# Backend specific
+backend/dist/
+backend/build/
+
+
+# Local env files
+**/.env
+**/.env*.local
+
+# IDE - VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# macOS
+.DS_Store
+*.pem
+
+# Android/IntelliJ
+mobile/android/build/
+mobile/.idea
+mobile/.gradle
+mobile/local.properties
+mobile/*.iml
+mobile/*.hprof
+mobile/.cxx/
+mobile/*.keystore
+!mobile/debug.keystore
+
+# iOS
+mobile/ios/pods/
+mobile/ios/build/
+mobile/ios/*.xcworkspace
+mobile/ios/xcuserdata/
+
+# Temporary files
+*.swp
+*.swo
+*~
