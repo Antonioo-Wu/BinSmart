@@ -1,9 +1,10 @@
-const express = require('express');
-const multer = require('multer');
-const classificationController = require('../controllers/classificationController');
-const huggingFaceService = require('../service/huggingfaceService');
+import express from 'express';
+import multer from 'multer';
+import classificationController from '../controllers/classificationController.js';
+import HuggingFaceService from '../service/huggingfaceService.js';
 
 const router = express.Router();
+const huggingFaceService = new HuggingFaceService();
 const upload = multer({ 
     storage: multer.memoryStorage(),
     limits: {
@@ -50,4 +51,4 @@ router.get('/test', async (req, res) => {
 });
 
 
-module.exports = router;
+export default router;

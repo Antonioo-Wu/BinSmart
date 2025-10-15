@@ -1,6 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const dotenv = require('dotenv');
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import classificationRoutes from './routes/classificationRoutes.js';
 
 // Configuración de variables de entorno
 dotenv.config();
@@ -18,7 +21,6 @@ app.get('/', (req, res) => {
 });
 
 // Rutas de clasificación
-const classificationRoutes = require('./routes/classificationRoutes');
 app.use('/api/classification', classificationRoutes);
 
 // Puerto
