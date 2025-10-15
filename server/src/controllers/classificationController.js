@@ -1,4 +1,4 @@
-const huggingFaceService = require('../service/huggingfaceService');
+import huggingFaceService from '../service/huggingfaceService.js';
 
 class ClassificationController {
     async classifyImage(req, res) {
@@ -19,4 +19,4 @@ class ClassificationController {
     }
 }
 
-module.exports = new ClassificationController();
+export default ClassificationController;

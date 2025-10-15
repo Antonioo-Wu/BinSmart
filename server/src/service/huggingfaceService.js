@@ -1,6 +1,6 @@
-const { Client } = require('@gradio/client');
-const fetch = require('node-fetch');
-const FormData = require('form-data');
+import { Client } from '@gradio/client';
+import fetch from 'node-fetch';
+import FormData from 'form-data';
 
 class HuggingFaceService {
     constructor() {
@@ -64,4 +64,4 @@ class HuggingFaceService {
     }
 }
 
-module.exports = new HuggingFaceService();
+export default HuggingFaceService;
