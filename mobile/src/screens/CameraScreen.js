@@ -1,14 +1,47 @@
-import { useState } from 'react';
-import { Text, View, TouchableOpacity, Button } from 'react-native';
+import { useState, useRef } from 'react';
+import { Text, View, TouchableOpacity, Button, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import styles from '../styles/CameraScreen.styles';
+import api from '../services/api';
 
 export default function CameraScreen({ navigation }) {
   const [facing, setFacing] = useState('back');
   const [permission, requestPermission] = useCameraPermissions();
 
+  const cameraRef = useRef(null);
+
   const takePicture = async () => {
-    // TODO: Implementar la toma de foto con la nueva API
+    if (!cameraRef.current) return;
+    try {
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.5,
+        base64: true,
+      });
+
+      // Enviar la foto
+      try {
+        const formData = new FormData();
+        formData.append('image', {
+          uri: photo.uri,
+          type: 'image/jpeg',
+          name: 'photo.jpg'
+        });
+
+        const response = await api.post('/classification/classify', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        navigation.navigate('ScanResult', { 
+          imageUri: photo.uri,
+          classification: response.data 
+        });
+      } catch (error) {
+        Alert.alert('Error', 'No se pudo clasificar la imagen');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo tomar la foto');
+    }
   };
 
   if (!permission) {
@@ -30,7 +63,10 @@ export default function CameraScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <CameraView style={styles.camera} facing={facing}>
+      <CameraView 
+        ref={cameraRef}
+        style={styles.camera} 
+        facing={facing}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
