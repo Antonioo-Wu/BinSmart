@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { API_URL } from '@env';
 
-const baseURL = API_URL || 'https://binsmart.onrender.com/';
+const baseURL = API_URL || 'https://localhost:3000/api';
 
 const api = axios.create({
   baseURL: API_URL,
