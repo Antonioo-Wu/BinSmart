@@ -22,7 +22,7 @@ export default function ScanResultScreen({ route }) {
         </View>
       </View>
     </ScrollView>
-  );
+  );  
 }
 
 const styles = StyleSheet.create({
