@@ -1,12 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import connectDB from './config/db.js';
+import usuarioRoutes from './routes/usuarioRoutes.js';
 import classificationRoutes from './routes/classificationRoutes.js';
 
 // Configuración de variables de entorno
 dotenv.config();
+
+// Conectar a MongoDB
+connectDB();
 
 const app = express();
 
@@ -20,8 +23,16 @@ app.get('/', (req, res) => {
   res.json({ message: 'Bienvenido a la API de BinSmart' });
 });
 
-// Rutas de clasificación
+
+// Rutas de la API
+app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/classification', classificationRoutes);
+
+// Manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Algo salió mal!' });
+});
 
 // Puerto
 const PORT = process.env.PORT || 3000;
