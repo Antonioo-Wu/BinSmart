@@ -38,7 +38,7 @@ export function MetricsScreen() {
           <Text style={styles.gridNumber}>10</Text>
           <Text style={[styles.gridLabel, styles.compostText]}>Compost</Text>
         </View>
-   
+    
         <View style={[styles.gridItem, styles.trashCard]}>
           <Ionicons name="trash" size={30} color="#95a5a6" />
           <Text style={styles.gridNumber}>12</Text>
@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
-    paddingBottom: 20
+    paddingBottom: 20,
+    paddingHorizontal: 100
   },
   title: {
     fontSize: 28,
@@ -91,10 +92,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   diversionCard: {
-    backgroundColor: '#f0f9ff',
+    backgroundColor: '#f8fbff',
     borderRadius: 15,
     padding: 20,
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#cce4ff',
   },
   diversionContent: {
     flexDirection: 'row',
@@ -126,6 +129,8 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 20,
     alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e8e8e8',
   },
   totalTitle: {
     fontSize: 20,
@@ -149,18 +154,23 @@ const styles = StyleSheet.create({
     padding: 20,
     marginBottom: 15,
     alignItems: 'center',
+    borderWidth: 1,
   },
   recyclableCard: {
-    backgroundColor: '#f0f9ff',
+    backgroundColor: '#f8fbff',
+    borderColor: '#cce4ff',
   },
   compostCard: {
-    backgroundColor: '#f0fff0',
+    backgroundColor: '#f8fff8',
+    borderColor: '#ccf2d4',
   },
   trashCard: {
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#f8f8f8',
+    borderColor: '#e0e0e0',
   },
   hazardousCard: {
-    backgroundColor: '#fff0f0',
+    backgroundColor: '#fff8f8',
+    borderColor: '#f2cccc',
   },
   gridNumber: {
     fontSize: 32,
@@ -184,9 +194,11 @@ const styles = StyleSheet.create({
     color: '#e74c3c',
   },
   guidelinesCard: {
-    backgroundColor: '#f0f9ff',
+    backgroundColor: '#f8fbff',
     borderRadius: 15,
     padding: 20,
+    borderWidth: 1,
+    borderColor: '#cce4ff',
   },
   guidelinesTitle: {
     fontSize: 20,
