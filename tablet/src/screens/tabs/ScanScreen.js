@@ -158,13 +158,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 20,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    // shadowColor: '#000',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
     elevation: 5,
   },
   iconContainer: {
@@ -206,14 +206,16 @@ const styles = StyleSheet.create({
   tipContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f0f9ff',
+    backgroundColor: '#f0fbff',
+    borderWidth: 1,
+    borderColor: '#baedff',
     padding: 10,
     borderRadius: 10,
     width: '100%',
   },
   tipText: {
     marginLeft: 10,
-    color: '#3498db',
+    color: 'black',
     fontSize: 14,
   },
   closeButton: {
