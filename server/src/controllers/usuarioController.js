@@ -116,3 +116,38 @@ export const getPerfil = async (req, res) => {
         res.status(500).json({ message: 'Error al obtener perfil' });
     }
 };
+
+// Sumarle puntos al usuario
+export const asignPoints = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { points } = req.body;
+        const usuario = await Usuario.findById(userId);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        usuario.puntos += points;
+        await usuario.save();
+        res.json({ message: 'Puntos asignados correctamente', usuario });
+    } catch (error) {
+        console.error('Error al asignar puntos:', error);
+        res.status(500).json({ message: 'Error al asignar puntos' });
+    }
+}
+
+export const discountPoints = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        const { points } = req.body;
+        const usuario = await Usuario.findById(userId);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        usuario.puntos -= points;
+        await usuario.save();
+        res.json({ message: 'Puntos descontados correctamente', usuario });
+    } catch (error) {
+        console.error('Error al descontar puntos:', error);
+        res.status(500).json({ message: 'Error al descontar puntos' });
+    }
+}
