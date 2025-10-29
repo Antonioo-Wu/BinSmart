@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import usuarioRoutes from './routes/usuarioRoutes.js';
 import classificationRoutes from './routes/classificationRoutes.js';
+import qrRoutes from './routes/qrRoutes.js';
 
 // Configuración de variables de entorno
 dotenv.config();
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 // Rutas de la API
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/classification', classificationRoutes);
+app.use('/api/qr', qrRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {
