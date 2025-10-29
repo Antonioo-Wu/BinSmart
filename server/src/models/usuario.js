@@ -32,6 +32,11 @@ const usuarioSchema = new mongoose.Schema({
   puntos: {
     type: Number,
     default: 0
+  },
+  historialCanjes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'HistorialCanjes',
+    default: []
   }
 });
 
