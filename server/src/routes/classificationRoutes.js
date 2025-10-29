@@ -39,16 +39,4 @@ router.post('/classify', async (req, res) => {
     });
 });
 
-// Test
-router.get('/test', async (req, res) => {
-    try {
-        const result = await huggingFaceService.testClassification();
-        res.json(result);
-    } catch (error) {
-        console.error('Error in test route:', error);
-        res.status(500).json({ error: error.message });
-    }
-});
-
-
 export default router;
