@@ -16,6 +16,7 @@ export default function LoginScreen({ navigation }) {
     try {
       setError('');
       alert('Login exitoso');
+      navigation.navigate('MainApp');
     } catch (err) {
       setError('Error al iniciar sesión. Por favor, intente nuevamente.');
     }
