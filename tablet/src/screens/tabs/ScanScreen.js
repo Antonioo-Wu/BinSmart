@@ -9,6 +9,7 @@ export function ScanScreen({ navigation }) {
   const [showCamera, setShowCamera] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
+  const [cameraType, setCameraType] = useState('front');
   const cameraRef = useRef(null);
 
   const handleScanPress = async () => {
@@ -86,7 +87,7 @@ export function ScanScreen({ navigation }) {
           <CameraView
             ref={cameraRef}
             style={styles.camera}
-            facing="back"
+            facing={cameraType}
           />
           <View style={styles.overlay}>
             <TouchableOpacity
@@ -94,6 +95,12 @@ export function ScanScreen({ navigation }) {
               onPress={() => setShowCamera(false)}
             >
               <Ionicons name="close" size={30} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.flipButton}
+              onPress={() => setCameraType(cameraType === 'front' ? 'back' : 'front')}
+            >
+              <Ionicons name="camera-reverse" size={30} color="white" />
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.captureButton}
@@ -222,6 +229,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 10,
+    borderRadius: 25,
+    zIndex: 1,
+  },
+  flipButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 10,
     borderRadius: 25,
