@@ -2,15 +2,17 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, StatusBar } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../../services/api';
+import { classifyImage } from '../../services/api';
 import { LoadingScreen } from './LoadingScreen';
 
-export function ScanScreen({ navigation }) {
+export function ScanScreen({ navigation, route }) {
   const [showCamera, setShowCamera] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraType, setCameraType] = useState('front');
   const cameraRef = useRef(null);
+
+  const isGuestMode = route?.name === 'GuestScan';
 
   const handleScanPress = async () => {
     if (!permission?.granted) {
@@ -37,41 +39,52 @@ export function ScanScreen({ navigation }) {
       setShowCamera(false);
       setIsAnalyzing(true);
 
-      setTimeout(() => {
+      try {        
+        const formData = new FormData();
+        formData.append('image', {
+          uri: photo.uri,
+          type: 'image/jpeg',
+          name: 'photo.jpg'
+        });
+
+        const res = await classifyImage(formData);
+        const label = res.data[0].label 
+
         setIsAnalyzing(false);
-        navigation.navigate('ScanResult', {
-          imageUri: photo.uri,
-          classification: 'Sample Classification' // Esto sería reemplazado por la respuesta real de la API
-        });
-      }, 3000);
-
-      /* Código de la API real (comentado por ahora)
-      const formData = new FormData();
-      formData.append('image', {
-        uri: photo.uri,
-        type: 'image/jpeg',
-        name: 'photo.jpg'
-      });
-
-      try {
-        const response = await api.post('/classification/classify', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        setShowCamera(false);
-        navigation.navigate('ScanResult', {
-          imageUri: photo.uri,
-          classification: response.data
-        });
+        
+        if (isGuestMode) {
+          navigation.navigate('GuestScanResult', {
+            imageUri: photo.uri,
+            classification: label,
+          });
+        } else {
+          navigation.navigate('ScanResult', {
+            imageUri: photo.uri,
+            classification: label,
+          });
+        }
       } catch (error) {
-        Alert.alert('Error', 'Could not classify the image');
-        setShowCamera(false);
+        console.error('Error clasificando imagen:', error);
+        setIsAnalyzing(false);
+        Alert.alert(
+          'Error',
+          'No se pudo clasificar la image. Por favor, intenta de nuevo.',
+          [
+            {
+              text: 'Reintentar',
+              onPress: () => setShowCamera(true)
+            },
+            {
+              text: 'Cancelar',
+              style: 'cancel'
+            }
+          ]
+        );
       }
-      */
     } catch (error) {
-      Alert.alert('Error', 'Could not take picture');
+      console.error('Error tomando foto:', error);
+      Alert.alert('Error', 'No se pudo tomar la foto');
+      setIsAnalyzing(false);
     }
   };
 

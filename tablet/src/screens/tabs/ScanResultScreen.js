@@ -1,54 +1,62 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export function ScanResultScreen({ route, navigation }) {
   const { imageUri, classification } = route.params;
+  
+  const isGuestMode = route?.name === 'GuestScanResult';  
 
   const handleScanAgain = () => {
-    navigation.navigate('ScanMain');
+    if (isGuestMode) {
+      navigation.navigate('GuestScan');
+    } else {
+      navigation.navigate('ScanMain');
+    }
+  };
+
+  const handleGoHome = () => {
+    navigation.navigate('Home');
   };
 
   return (
-    <View style={styles.container}>
-      {/* Image Preview */}
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       <Image 
         source={{ uri: imageUri }}
         style={styles.image}
         resizeMode="contain"
       />
 
-      {/* Success Header */}
       <View style={styles.successHeader}>
-        <Ionicons name="checkmark-circle" size={30} color="#3498db" />
-        <Text style={styles.successText}>Item identified successfully!</Text>
+        <Ionicons name="checkmark-circle" size={30} color="#37b859" />
+        <Text style={styles.successText}>¡Item identificado exitosamente!</Text>
       </View>
 
-      {/* Item Name Card */}
-      <View style={styles.itemCard}>
-        <Text style={styles.itemName}>Plastic Bottle</Text>
+      <View style={styles.resultCard}>
+        <Text style={styles.categoryLabel}>Categoría:</Text>
+        <Text style={styles.categoryValue}>{classification}</Text>
       </View>
 
-      {/* Bin Information Card */}
-      <View style={styles.binCard}>
-        <View style={styles.binHeaderRow}>
-          <Ionicons name="reload-circle" size={30} color="#3498db" />
-          <Text style={styles.binHeaderText}>Use this bin:</Text>
-        </View>
-        <Text style={styles.binName}>Blue Recycling Bin</Text>
-        <Text style={styles.binInstructions}>
-          This item can be recycled. Please rinse before placing in bin.
-        </Text>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity 
+          style={styles.scanAgainButton}
+          onPress={handleScanAgain}
+        >
+          <Ionicons name="camera-outline" size={24} color="white" style={styles.buttonIcon} />
+          <Text style={styles.scanAgainText}>Scan Another Item</Text>
+        </TouchableOpacity>
+        
+        {isGuestMode && (
+          <TouchableOpacity 
+            style={styles.homeButton}
+            onPress={handleGoHome}
+          >
+            <Ionicons name="home-outline" size={24} color="#37b859" style={styles.buttonIcon} />
+            <Text style={styles.homeButtonText}>Back to Home</Text>
+          </TouchableOpacity>
+        )}
       </View>
-
-      {/* Scan Again Button */}
-      <TouchableOpacity 
-        style={styles.scanAgainButton}
-        onPress={handleScanAgain}
-      >
-        <Text style={styles.scanAgainText}>Scan Another Item</Text>
-      </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -56,8 +64,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f5f5f5',
+  },
+  contentContainer: {
     padding: 20,
-    paddingHorizontal: 100
+    paddingHorizontal: 100,
+    flexGrow: 1,
   },
   image: {
     width: '100%',
@@ -74,14 +85,13 @@ const styles = StyleSheet.create({
   },
   successText: {
     fontSize: 20,
-    color: '#3498db',
     fontWeight: '600',
+    color: '#37b859',
   },
-  itemCard: {
+  resultCard: {
     backgroundColor: 'white',
     borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
+    padding: 25,
     marginBottom: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -92,51 +102,83 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  itemName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-  },
-  binCard: {
-    backgroundColor: '#f0f9ff',
-    borderRadius: 15,
-    padding: 20,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#e1f0ff',
-  },
-  binHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 15,
-    gap: 10,
-  },
-  binHeaderText: {
-    fontSize: 18,
-    color: '#3498db',
-    fontWeight: '600',
-  },
-  binName: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    marginBottom: 15,
-  },
-  binInstructions: {
+  categoryLabel: {
     fontSize: 16,
+    color: '#7f8c8d',
+    marginBottom: 8,
+  },
+  categoryValue: {
+    fontSize: 32,
+    fontWeight: 'bold',
     color: '#2c3e50',
-    lineHeight: 24,
+    marginBottom: 20,
+  },
+  confidencesSection: {
+    marginTop: 10,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#ecf0f1',
+  },
+  confidencesTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2c3e50',
+    marginBottom: 12,
+  },
+  confidenceItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: '#f8f9fa',
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  confidenceLabel: {
+    fontSize: 14,
+    color: '#2c3e50',
+    fontWeight: '500',
+  },
+  confidenceValue: {
+    fontSize: 14,
+    color: '#37b859',
+    fontWeight: 'bold',
+  },
+  buttonContainer: {
+    marginTop: 20,
+    gap: 15,
+    paddingBottom: 20,
   },
   scanAgainButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#37b859',
     borderRadius: 15,
     padding: 20,
+    flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 'auto',
+    justifyContent: 'center',
   },
   scanAgainText: {
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
+  },
+  homeButton: {
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#37b859',
+  },
+  homeButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#37b859',
+  },
+  buttonIcon: {
+    marginRight: 10,
   },
 });

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
@@ -12,7 +12,7 @@ export function QRCodeScreen({ navigation }) {
     setShowCamera(false);
     Alert.alert(
       "QR Code Detected",
-      `QR Code Content: ${data}`,
+      `Successfully logged in! Welcome to BinSmart.`,
       [
         {
           text: "Try Again",
@@ -20,12 +20,19 @@ export function QRCodeScreen({ navigation }) {
           style: "cancel"
         },
         { 
-          text: "OK", 
-          onPress: () => navigation.goBack()
+          text: "Continue", 
+          onPress: () => navigation.replace('MainApp')
         }
       ]
     );
   };
+
+  useEffect(() => {
+    // Simulacion de escaneo de QR
+    setTimeout(() => {
+      navigation.replace('MainApp')
+    }, 2000)
+  }, [])
 
   if (!permission?.granted) {
     return (
