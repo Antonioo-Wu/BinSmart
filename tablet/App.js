@@ -3,16 +3,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FontAwesome6 } from '@expo/vector-icons';
-import { TouchableOpacity } from 'react-native';
 
 // Importamos nuestras pantallas
 import { ScanScreen } from './src/screens/tabs/ScanScreen';
 import { ScanResultScreen } from './src/screens/tabs/ScanResultScreen';
 import { MetricsScreen } from './src/screens/tabs/MetricsScreen';
 import { HistoryScreen } from './src/screens/tabs/HistoryScreen';
-import { GuestScreen } from './src/screens/GuestScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
-import { UserScreen } from './src/screens/UserScreen';
 import { QRCodeScreen } from './src/screens/QRCodeScreen';
 
 const Tab = createBottomTabNavigator();
@@ -39,10 +36,34 @@ function ScanStackScreen() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen 
+          name="Home"
+          component={HomeScreen}
+          options={{
+            title: 'BinSmart',
+            headerShown: true,
+            headerStyle: {
+              backgroundColor: 'white',
+            },
+            headerTintColor: 'black',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        />
+
+        <Stack.Screen
+          name="QRScanner"
+          component={QRCodeScreen}
+          options={{
+            headerShown: false
+          }}
+        />
+
         <Stack.Screen 
           name="MainApp" 
-          options={({ navigation }) => ({
+          options={{
             title: 'BinSmart',
             headerStyle: {
               backgroundColor: 'white',
@@ -51,15 +72,8 @@ export default function App() {
             headerTitleStyle: {
               fontWeight: 'bold',
             },
-            headerRight: () => (
-              <TouchableOpacity
-                onPress={() => navigation.navigate('ProfileMenu')}
-                style={{ marginRight: 15 }}
-              >
-                <FontAwesome6 name="user-circle" size={24} color="#37b859" />
-              </TouchableOpacity>
-            ),
-          })}
+            headerLeft: () => null, 
+          }}
         >
           {() => (
             <Tab.Navigator
@@ -87,35 +101,22 @@ export default function App() {
           )}
         </Stack.Screen>
 
+        {/* Pantalla de escaneo simple para invitados */}
         <Stack.Screen
-          name="ProfileMenu"
-          component={HomeScreen}
+          name="GuestScan"
+          component={ScanScreen}
           options={{
-            title: 'Profile Menu',
+            title: 'Scan Item - Guest Mode',
             headerTintColor: '#37b859',
           }}
         />
-        <Stack.Screen
-          name="Guest"
-          component={GuestScreen}
-          options={{
-            title: 'Guest Mode',
-            headerTintColor: '#37b859',
-          }}
-        />
-        <Stack.Screen
-          name="User"
-          component={UserScreen}
-          options={{
-            title: 'User Mode',
-            headerTintColor: '#37b859',
-          }}
-        />
-        <Stack.Screen
-          name="QRScanner"
-          component={QRCodeScreen}
-          options={{
-            headerShown: false
+
+        {/* Pantalla de resultado para invitados */}
+        <Stack.Screen 
+          name="GuestScanResult" 
+          component={ScanResultScreen}
+          options={{ 
+            headerShown: false,
           }}
         />
       </Stack.Navigator>
