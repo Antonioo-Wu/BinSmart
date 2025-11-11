@@ -1,22 +1,21 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar, ActivityIndicator } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../context/UserContext';
-import { validateQrToken } from '../services/api';
 
 export function QRCodeScreen({ navigation }) {
   const [showCamera, setShowCamera] = useState(true);
-  const [isValidating, setIsValidating] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
-  const { login } = useUser();
+  const { saveSession } = useUser();
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setShowCamera(false);
-    setIsValidating(true);
+    setIsProcessing(true);
     
-    try {
+    try {      
       let qrData;
       try {
         qrData = JSON.parse(data);
@@ -29,7 +28,7 @@ export function QRCodeScreen({ navigation }) {
             {
               text: "Intentar de nuevo",
               onPress: () => {
-                setIsValidating(false);
+                setIsProcessing(false);
                 setShowCamera(true);
               }
             }
@@ -40,7 +39,6 @@ export function QRCodeScreen({ navigation }) {
 
       const { qrToken, sessionJwt } = qrData;
 
-
       if (!qrToken || !sessionJwt) {
         Alert.alert(
           "QR Inválido",
@@ -49,7 +47,7 @@ export function QRCodeScreen({ navigation }) {
             {
               text: "Intentar de nuevo",
               onPress: () => {
-                setIsValidating(false);
+                setIsProcessing(false);
                 setShowCamera(true);
               }
             }
@@ -58,38 +56,28 @@ export function QRCodeScreen({ navigation }) {
         return;
       }
 
-      console.log('🔐 Validando QR con el servidor...');
-      const response = await validateQrToken(qrToken, sessionJwt);
-
-      if (response.success) {
-        login(response.usuario);
-        
-        console.log('✅ Login exitoso:', response.usuario.nombre);
-        
-        Alert.alert(
-          "¡Bienvenido!",
-          `Hola ${response.usuario.nombre}!\nHas iniciado sesión exitosamente.`,
-          [
-            { 
-              text: "Continuar", 
-              onPress: () => navigation.replace('MainApp')
-            }
-          ]
-        );
-      }
-    } catch (error) {
-      console.error('❌ Error validando QR:', error);
-      
-      const errorMessage = error.response?.data?.error || 'Error al validar el código QR';
+      saveSession(qrToken, sessionJwt);
       
       Alert.alert(
-        "Error de Autenticación",
-        errorMessage,
+        "¡Sesión Iniciada!",
+        "El código QR ha sido escaneado correctamente.\nLa sesión se mantendrá activa."
+      );
+      
+      setTimeout(() => {
+        navigation.replace('MainApp');
+      }, 2000);
+
+    } catch (error) {
+      console.error('❌ Error procesando QR:', error);
+      
+      Alert.alert(
+        "Error",
+        "Ocurrió un error al procesar el código QR",
         [
           {
             text: "Intentar de nuevo",
             onPress: () => {
-              setIsValidating(false);
+              setIsProcessing(false);
               setShowCamera(true);
             }
           },
@@ -101,7 +89,7 @@ export function QRCodeScreen({ navigation }) {
         ]
       );
     } finally {
-      setIsValidating(false);
+      setIsProcessing(false);
     }
   };
 
@@ -119,12 +107,12 @@ export function QRCodeScreen({ navigation }) {
     );
   }
 
-  if (isValidating) {
+  if (isProcessing) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color="#37b859" />
         <Text style={[styles.text, { marginTop: 20, color: '#37b859' }]}>
-          Validando código QR...
+          Procesando código QR...
         </Text>
       </View>
     );

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-// const baseURL = process.env.EXPO_PUBLIC_API_URL || 'https://binsmart.onrender.com';
-const baseURL = 'http://localhost:3000';
+const baseURL = process.env.EXPO_PUBLIC_API_URL || 'https://binsmart.onrender.com';
 
 export const classifyImage = async (image) => {
   const response = await axios.post(
@@ -23,6 +22,11 @@ export const registrarEscaneo = async (userId, tipo, confianza, imagenUrl = null
 
 export const obtenerHistorial = async (userId) => {
   const response = await axios.get(`${baseURL}/api/escaneos/historial/${userId}`);
+  return response.data;
+};
+
+export const obtenerTodosLosEscaneos = async () => {
+  const response = await axios.get(`${baseURL}/api/escaneos`);
   return response.data;
 };
 

@@ -61,17 +61,18 @@ export function ScanScreen({ navigation, route }) {
             classification: label,
           });
         } else {
-          navigation.navigate('ScanResult', {
-            imageUri: photo.uri,
-            classification: label,
-          });
-
+          console.log(userId);
           if (userId) {
             console.log('💾 Guardando en historial...');
             registrarEscaneo(userId, label, confianza, photo.uri)
               .then(() => console.log('✅ Historial guardado'))
               .catch(err => console.error('⚠️ Error guardando historial:', err));
           }
+
+          navigation.navigate('ScanResult', {
+            imageUri: photo.uri,
+            classification: label,
+          });
         }
       } catch (error) {
         console.error('Error clasificando imagen:', error);

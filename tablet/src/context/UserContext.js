@@ -8,9 +8,11 @@ export const UserProvider = ({ children }) => {
   const [userEmail, setUserEmail] = useState(null);
   const [userPoints, setUserPoints] = useState(0);
   const [isGuest, setIsGuest] = useState(false);
+  const [qrToken, setQrToken] = useState(null);
+  const [sessionJwt, setSessionJwt] = useState(null);
+  const [sessionActive, setSessionActive] = useState(false);
 
   const login = (userData) => {
-    // userData puede ser solo el id (string) o un objeto completo
     if (typeof userData === 'string') {
       setUserId(userData);
       setUserName(null);
@@ -31,6 +33,24 @@ export const UserProvider = ({ children }) => {
     setUserEmail(null);
     setUserPoints(0);
     setIsGuest(true);
+    setSessionActive(false);
+  };
+
+  const saveSession = (qrTokenValue, sessionJwtValue, userData = null) => {
+    setQrToken(qrTokenValue);
+    setSessionJwt(sessionJwtValue);
+    setSessionActive(true);
+    setUserId(qrTokenValue);
+    
+    if (userData) {
+      login(userData);
+    }
+  };
+
+  const clearSession = () => {
+    setQrToken(null);
+    setSessionJwt(null);
+    setSessionActive(false);
   };
 
   const logout = () => {
@@ -39,6 +59,7 @@ export const UserProvider = ({ children }) => {
     setUserEmail(null);
     setUserPoints(0);
     setIsGuest(false);
+    clearSession();
   };
 
   return (
@@ -47,10 +68,15 @@ export const UserProvider = ({ children }) => {
       userName, 
       userEmail, 
       userPoints,
-      isGuest, 
+      isGuest,
+      qrToken,
+      sessionJwt,
+      sessionActive,
       login, 
       loginAsGuest, 
-      logout 
+      logout,
+      saveSession,
+      clearSession
     }}>
       {children}
     </UserContext.Provider>
