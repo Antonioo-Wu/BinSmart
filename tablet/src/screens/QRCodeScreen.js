@@ -1,38 +1,109 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar, ActivityIndicator } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
+import { useUser } from '../context/UserContext';
+import { validateQrToken } from '../services/api';
 
 export function QRCodeScreen({ navigation }) {
   const [showCamera, setShowCamera] = useState(true);
+  const [isValidating, setIsValidating] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
+  const { login } = useUser();
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setShowCamera(false);
-    Alert.alert(
-      "QR Code Detected",
-      `Successfully logged in! Welcome to BinSmart.`,
-      [
-        {
-          text: "Try Again",
-          onPress: () => setShowCamera(true),
-          style: "cancel"
-        },
-        { 
-          text: "Continue", 
-          onPress: () => navigation.replace('MainApp')
-        }
-      ]
-    );
-  };
+    setIsValidating(true);
+    
+    try {
+      let qrData;
+      try {
+        qrData = JSON.parse(data);
+      } catch (parseError) {
+        console.error('Error parsing QR data:', parseError);
+        Alert.alert(
+          "QR Inválido",
+          "El código QR no tiene el formato correcto",
+          [
+            {
+              text: "Intentar de nuevo",
+              onPress: () => {
+                setIsValidating(false);
+                setShowCamera(true);
+              }
+            }
+          ]
+        );
+        return;
+      }
 
-  useEffect(() => {
-    // Simulacion de escaneo de QR
-    setTimeout(() => {
-      navigation.replace('MainApp')
-    }, 2000)
-  }, [])
+      const { qrToken, sessionJwt } = qrData;
+
+
+      if (!qrToken || !sessionJwt) {
+        Alert.alert(
+          "QR Inválido",
+          "El código QR no contiene la información necesaria",
+          [
+            {
+              text: "Intentar de nuevo",
+              onPress: () => {
+                setIsValidating(false);
+                setShowCamera(true);
+              }
+            }
+          ]
+        );
+        return;
+      }
+
+      console.log('🔐 Validando QR con el servidor...');
+      const response = await validateQrToken(qrToken, sessionJwt);
+
+      if (response.success) {
+        login(response.usuario);
+        
+        console.log('✅ Login exitoso:', response.usuario.nombre);
+        
+        Alert.alert(
+          "¡Bienvenido!",
+          `Hola ${response.usuario.nombre}!\nHas iniciado sesión exitosamente.`,
+          [
+            { 
+              text: "Continuar", 
+              onPress: () => navigation.replace('MainApp')
+            }
+          ]
+        );
+      }
+    } catch (error) {
+      console.error('❌ Error validando QR:', error);
+      
+      const errorMessage = error.response?.data?.error || 'Error al validar el código QR';
+      
+      Alert.alert(
+        "Error de Autenticación",
+        errorMessage,
+        [
+          {
+            text: "Intentar de nuevo",
+            onPress: () => {
+              setIsValidating(false);
+              setShowCamera(true);
+            }
+          },
+          {
+            text: "Cancelar",
+            style: "cancel",
+            onPress: () => navigation.goBack()
+          }
+        ]
+      );
+    } finally {
+      setIsValidating(false);
+    }
+  };
 
   if (!permission?.granted) {
     return (
@@ -44,6 +115,17 @@ export function QRCodeScreen({ navigation }) {
         >
           <Text style={styles.buttonText}>Grant Permission</Text>
         </TouchableOpacity>
+      </View>
+    );
+  }
+
+  if (isValidating) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#37b859" />
+        <Text style={[styles.text, { marginTop: 20, color: '#37b859' }]}>
+          Validando código QR...
+        </Text>
       </View>
     );
   }
@@ -72,7 +154,9 @@ export function QRCodeScreen({ navigation }) {
             <View style={styles.scanArea}>
               <View style={styles.scanFrame} />
             </View>
-            <Text style={styles.scanText}>Position QR Code within frame</Text>
+            <Text style={styles.scanText}>
+              Escanea el código QR desde tu móvil
+            </Text>
           </View>
         </View>
       </View>
@@ -90,6 +174,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   cameraContainer: {
     flex: 1,

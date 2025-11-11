@@ -1,8 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
+import { useUser } from '../context/UserContext';
 
 export function HomeScreen({ navigation }) {
+  const { loginAsGuest } = useUser();
+
+  const handleGuestMode = () => {
+    loginAsGuest();
+    navigation.navigate('GuestScan');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to BinSmart</Text>
@@ -10,7 +18,7 @@ export function HomeScreen({ navigation }) {
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('GuestScan')}
+          onPress={handleGuestMode}
         >
           <FontAwesome6 name="user" size={24} color="white" style={styles.buttonIcon} />
           <Text style={styles.buttonText}>Guest Mode</Text>

@@ -21,8 +21,11 @@ export const generateQrToken = (req, res) => {
 };
 
 export const validateQrToken = async (req, res) => {
+    console.log("Entro a validar el token")
     try {
         const { qrToken, sessionJwt } = req.body;
+
+        console.log(qrToken, sessionJwt)
 
         if (!qrToken || !sessionJwt) {
             return res.status(400).json({ 

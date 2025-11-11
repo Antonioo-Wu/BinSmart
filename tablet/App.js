@@ -11,6 +11,7 @@ import { MetricsScreen } from './src/screens/tabs/MetricsScreen';
 import { HistoryScreen } from './src/screens/tabs/HistoryScreen';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { QRCodeScreen } from './src/screens/QRCodeScreen';
+import { UserProvider } from './src/context/UserContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -35,8 +36,9 @@ function ScanStackScreen() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+    <UserProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home">
         <Stack.Screen 
           name="Home"
           component={HomeScreen}
@@ -121,5 +123,6 @@ export default function App() {
         />
       </Stack.Navigator>
     </NavigationContainer>
+    </UserProvider>
   );
 }

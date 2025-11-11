@@ -2,8 +2,9 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, Image, StatusBar } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
-import { classifyImage } from '../../services/api';
+import { classifyImage, registrarEscaneo } from '../../services/api';
 import { LoadingScreen } from './LoadingScreen';
+import { useUser } from '../../context/UserContext';
 
 export function ScanScreen({ navigation, route }) {
   const [showCamera, setShowCamera] = useState(false);
@@ -11,8 +12,9 @@ export function ScanScreen({ navigation, route }) {
   const [permission, requestPermission] = useCameraPermissions();
   const [cameraType, setCameraType] = useState('front');
   const cameraRef = useRef(null);
+  const { userId, isGuest } = useUser();
 
-  const isGuestMode = route?.name === 'GuestScan';
+  const isGuestMode = route?.name === 'GuestScan' || isGuest;
 
   const handleScanPress = async () => {
     if (!permission?.granted) {
@@ -48,7 +50,8 @@ export function ScanScreen({ navigation, route }) {
         });
 
         const res = await classifyImage(formData);
-        const label = res.data[0].label 
+        const label = res.data[0].label;
+        const confianza = res.data[0].confidences?.[0]?.confidence || 0;
 
         setIsAnalyzing(false);
         
@@ -62,6 +65,13 @@ export function ScanScreen({ navigation, route }) {
             imageUri: photo.uri,
             classification: label,
           });
+
+          if (userId) {
+            console.log('💾 Guardando en historial...');
+            registrarEscaneo(userId, label, confianza, photo.uri)
+              .then(() => console.log('✅ Historial guardado'))
+              .catch(err => console.error('⚠️ Error guardando historial:', err));
+          }
         }
       } catch (error) {
         console.error('Error clasificando imagen:', error);
