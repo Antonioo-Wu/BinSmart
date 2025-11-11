@@ -1,6 +1,5 @@
 import Historial from '../models/historialEscaneos.js';
 
-// Registrar un nuevo escaneo en el historial
 export const registrarEscaneo = async (req, res) => {
     try {
         const { userId, imagenUrl, tipo, confianza } = req.body;
@@ -38,14 +37,30 @@ export const registrarEscaneo = async (req, res) => {
     }
 };
 
-// Obtener historial de escaneos de un usuario
+export const obtenerEscaneos = async (req, res) => {
+    try {
+        const escaneos = await Historial.find();
+        res.json({
+            success: true,
+            data: escaneos
+        });
+    } catch (error) {
+        console.error('Error al obtener escaneos:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener escaneos',
+            error: error.message
+        });
+    }
+}
+
 export const obtenerHistorial = async (req, res) => {
     try {
         const { userId } = req.params;
         
         const historial = await Historial.find({ usuario: userId })
             .sort({ fechaClasificacion: -1 })
-            .limit(100); // Limitar a los últimos 100 escaneos
+            .limit(100); 
 
         res.json({
             success: true,
@@ -62,7 +77,6 @@ export const obtenerHistorial = async (req, res) => {
     }
 };
 
-// Obtener un escaneo específico
 export const obtenerEscaneo = async (req, res) => {
     try {
         const { escaneoId } = req.params;
@@ -90,7 +104,6 @@ export const obtenerEscaneo = async (req, res) => {
     }
 };
 
-// Eliminar un escaneo del historial
 export const eliminarEscaneo = async (req, res) => {
     try {
         const { escaneoId } = req.params;
