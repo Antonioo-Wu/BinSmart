@@ -6,6 +6,7 @@ import usuarioRoutes from './routes/usuarioRoutes.js';
 import classificationRoutes from './routes/classificationRoutes.js';
 import qrRoutes from './routes/qrRoutes.js';
 import canjesRoutes from './routes/canjesRoutes.js';
+import escaneosRoutes from './routes/escaneosRoutes.js';
 
 // Configuración de variables de entorno
 dotenv.config();
@@ -16,7 +17,10 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,6 +35,7 @@ app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/classification', classificationRoutes);
 app.use('/api/qr', qrRoutes);
 app.use('/api/canjes', canjesRoutes);
+app.use('/api/escaneos', escaneosRoutes);
 
 // Manejo de errores
 app.use((err, req, res, next) => {

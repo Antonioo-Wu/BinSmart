@@ -28,6 +28,6 @@ const historialSchema = new mongoose.Schema({
 
 historialSchema.index({ fechaClasificacion: -1 });
 
-const Historial = mongoose.model('Historial', historialSchema);
+const Historial = mongoose.model('Historial_escaneos', historialSchema);
 
 export default Historial;

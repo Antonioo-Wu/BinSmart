@@ -14,6 +14,7 @@ const upload = multer({
 
 // clasificar
 router.post('/classify', async (req, res) => {
+    console.log('Procesando imagen para clasificar...');
     upload(req, res, async function(err) {
         if (err instanceof multer.MulterError) {
             return res.status(400).json({ error: `Error al subir el archivo: ${err.message}` });
