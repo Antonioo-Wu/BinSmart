@@ -39,15 +39,15 @@ npm start
 
 - Tablet (app principal):
 
-cd tablet
-npm install
+cd tablet;
+npm install;
 expo start
 
 
 - Mobile (demo):
 
-cd mobile
-npm install
+cd mobile;
+npm install;
 expo start
 
 
