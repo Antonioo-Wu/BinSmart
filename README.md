@@ -33,8 +33,8 @@ Requisitos: Node.js y, para las apps, Expo CLI si usas el cliente local.
 
 - Backend (server):
 
-cd server
-npm install
+cd server;
+npm install;
 npm start
 
 - Tablet (app principal):
