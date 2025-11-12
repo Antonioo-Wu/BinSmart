@@ -37,7 +37,9 @@ export function QRCodeScreen({ navigation }) {
         return;
       }
 
-      const { qrToken, sessionJwt } = qrData;
+      console.log(qrData)
+
+      const { qrToken, sessionJwt, userId } = qrData;
 
       if (!qrToken || !sessionJwt) {
         Alert.alert(
@@ -56,17 +58,16 @@ export function QRCodeScreen({ navigation }) {
         return;
       }
 
-      saveSession(qrToken, sessionJwt);
+      saveSession(qrToken, sessionJwt, userId);
+
+      setTimeout(() => {
+        navigation.replace('MainApp');
+      }, 1000);
       
       Alert.alert(
         "¡Sesión Iniciada!",
         "El código QR ha sido escaneado correctamente.\nLa sesión se mantendrá activa."
       );
-      
-      setTimeout(() => {
-        navigation.replace('MainApp');
-      }, 2000);
-
     } catch (error) {
       console.error('❌ Error procesando QR:', error);
       

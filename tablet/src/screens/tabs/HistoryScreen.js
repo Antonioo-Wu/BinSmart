@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator, RefreshControl } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { obtenerTodosLosEscaneos } from '../../services/api';
+import { obtenerHistorial } from '../../services/api';
 import { getWasteTypeStyle, formatTimeAgo } from '../../utils/functions';
+import { useUser } from '../../context/UserContext';
 
 
 
 export function HistoryScreen() {
+  const { userId } = useUser();
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +17,14 @@ export function HistoryScreen() {
   const fetchHistorial = async () => {
     try {
       setError(null);
-      const response = await obtenerTodosLosEscaneos();
+      
+      if (!userId) {
+        setError('No hay usuario activo');
+        setLoading(false);
+        return;
+      }
+      
+      const response = await obtenerHistorial(userId);
       
       if (response.success) {
         setHistoryData(response.data);
@@ -33,7 +42,7 @@ export function HistoryScreen() {
 
   useEffect(() => {
     fetchHistorial();
-  }, []);
+  }, [userId]);
 
   const onRefresh = () => {
     setRefreshing(true);

@@ -27,6 +27,7 @@ export const obtenerHistorial = async (userId) => {
 
 export const obtenerTodosLosEscaneos = async () => {
   const response = await axios.get(`${baseURL}/api/escaneos`);
+  console.log(response.data);
   return response.data;
 };
 

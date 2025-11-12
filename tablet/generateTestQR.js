@@ -15,7 +15,8 @@ const sessionJwt = jwt.sign(
 
 const qrData = {
   qrToken,
-  sessionJwt
+  sessionJwt,
+  userId: USER_ID
 };
 
 const qrString = JSON.stringify(qrData);

@@ -36,15 +36,11 @@ export const UserProvider = ({ children }) => {
     setSessionActive(false);
   };
 
-  const saveSession = (qrTokenValue, sessionJwtValue, userData = null) => {
+  const saveSession = (qrTokenValue, sessionJwtValue, userId) => {
     setQrToken(qrTokenValue);
     setSessionJwt(sessionJwtValue);
     setSessionActive(true);
-    setUserId(qrTokenValue);
-    
-    if (userData) {
-      login(userData);
-    }
+    setUserId(userId);
   };
 
   const clearSession = () => {
