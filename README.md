@@ -35,9 +35,6 @@ Requisitos: Node.js y, para las apps, Expo CLI si usas el cliente local.
 
 cd server
 npm install
-# si existe script dev (nodemon)
-npm run dev
-# o
 npm start
 
 - Tablet (app principal):
