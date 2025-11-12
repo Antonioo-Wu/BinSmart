@@ -2,9 +2,8 @@ import mongoose from 'mongoose';
 
 const historialSchema = new mongoose.Schema({
   usuario: {
-    // type: mongoose.Schema.Types.ObjectId,
-    // ref: 'Usuario',
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Usuario',
     required: true
   },
   imagenUrl: {
