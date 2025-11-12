@@ -150,4 +150,144 @@ export const discountPoints = async (req, res) => {
         console.error('Error al descontar puntos:', error);
         res.status(500).json({ message: 'Error al descontar puntos' });
     }
-}
+};
+
+// Actualizar perfil de usuario
+export const updatePerfil = async (req, res) => {
+    try {
+        const { nombre, email, telefono } = req.body;
+        const userId = req.usuario.id;
+
+        // Validaciones
+        if (!nombre || !email) {
+            return res.status(400).json({ 
+                message: 'Nombre y email son obligatorios' 
+            });
+        }
+
+        // Validar formato de email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ 
+                message: 'Formato de email inválido' 
+            });
+        }
+
+        // Verificar si el email ya existe en otro usuario
+        const emailExistente = await Usuario.findOne({ 
+            email, 
+            _id: { $ne: userId } 
+        });
+        if (emailExistente) {
+            return res.status(400).json({ 
+                message: 'El email ya está en uso por otro usuario' 
+            });
+        }
+
+        // Actualizar usuario
+        const usuario = await Usuario.findByIdAndUpdate(
+            userId,
+            { 
+                nombre, 
+                email,
+                ...(telefono && { telefono })
+            },
+            { new: true, runValidators: true }
+        ).select('-password');
+
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        res.json({
+            message: 'Perfil actualizado correctamente',
+            usuario
+        });
+    } catch (error) {
+        console.error('Error al actualizar perfil:', error);
+        res.status(500).json({ message: 'Error al actualizar perfil' });
+    }
+};
+
+// Cambiar contraseña
+export const changePassword = async (req, res) => {
+    try {
+        const { currentPassword, newPassword } = req.body;
+        const userId = req.usuario.id;
+
+        // Validaciones
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ 
+                message: 'Debes proporcionar la contraseña actual y la nueva' 
+            });
+        }
+
+        if (newPassword.length < 6) {
+            return res.status(400).json({ 
+                message: 'La nueva contraseña debe tener al menos 6 caracteres' 
+            });
+        }
+
+        // Buscar usuario
+        const usuario = await Usuario.findById(userId);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Verificar contraseña actual
+        const isMatch = await usuario.comparePassword(currentPassword);
+        if (!isMatch) {
+            return res.status(401).json({ 
+                message: 'La contraseña actual es incorrecta' 
+            });
+        }
+
+        // Actualizar contraseña (el hash se hace automáticamente en el pre-save)
+        usuario.password = newPassword;
+        await usuario.save();
+
+        res.json({ message: 'Contraseña actualizada correctamente' });
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
+        res.status(500).json({ message: 'Error al cambiar contraseña' });
+    }
+};
+
+// Eliminar cuenta
+export const deleteAccount = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const userId = req.usuario.id;
+
+        // Validación
+        if (!password) {
+            return res.status(400).json({ 
+                message: 'Debes proporcionar tu contraseña para confirmar' 
+            });
+        }
+
+        // Buscar usuario
+        const usuario = await Usuario.findById(userId);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Verificar contraseña
+        const isMatch = await usuario.comparePassword(password);
+        if (!isMatch) {
+            return res.status(401).json({ 
+                message: 'Contraseña incorrecta' 
+            });
+        }
+
+        // Eliminar usuario
+        await Usuario.findByIdAndDelete(userId);
+
+        res.json({ 
+            message: 'Cuenta eliminada correctamente' 
+        });
+    } catch (error) {
+        console.error('Error al eliminar cuenta:', error);
+        res.status(500).json({ message: 'Error al eliminar cuenta' });
+    }
+};
