@@ -7,7 +7,8 @@ import {
     discountPoints,
     updatePerfil,
     changePassword,
-    deleteAccount
+    deleteAccount,
+    upgradeToPremiun
 } from '../controllers/usuarioController.js';
 import auth from '../middleware/auth.js';
 
@@ -19,6 +20,7 @@ router.post('/login', login);
 router.get('/perfil', auth, getPerfil);
 router.put('/perfil', auth, updatePerfil);
 router.put('/cambiar-password', auth, changePassword);
+router.put('/mejorar-premium', auth, upgradeToPremiun);
 router.delete('/eliminar-cuenta', auth, deleteAccount);
 
 router.post('/asignar-puntos/:userId', asignPoints);

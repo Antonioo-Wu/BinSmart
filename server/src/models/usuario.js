@@ -29,9 +29,19 @@ const usuarioSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  telefono: {
+    type: String,
+    required: false,
+    trim: true
+  },
   puntos: {
     type: Number,
     default: 0
+  },
+  tipoSuscripcion: {
+    type: String,
+    enum: ['free', 'premium'],
+    default: 'free'
   },
   historialCanjes: {
     type: [mongoose.Schema.Types.ObjectId],

@@ -126,9 +126,28 @@ export const asignPoints = async (req, res) => {
         if (!usuario) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
-        usuario.puntos += points;
+        
+        // Calcular nuevos puntos
+        const nuevosPuntos = usuario.puntos + points;
+        
+        // Aplicar límite de 5000 para cuentas Free
+        if (usuario.tipoSuscripcion === 'free') {
+            usuario.puntos = Math.min(nuevosPuntos, 5000);
+            
+            if (nuevosPuntos > 5000) {
+                return res.json({ 
+                    message: 'Límite de puntos alcanzado (5000). Mejora a Premium para puntos ilimitados.',
+                    usuario,
+                    limitAlcanzado: true
+                });
+            }
+        } else {
+            // Premium: puntos ilimitados
+            usuario.puntos = nuevosPuntos;
+        }
+        
         await usuario.save();
-        res.json({ message: 'Puntos asignados correctamente', usuario });
+        res.json({ message: 'Puntos asignados correctamente', usuario, limitAlcanzado: false });
     } catch (error) {
         console.error('Error al asignar puntos:', error);
         res.status(500).json({ message: 'Error al asignar puntos' });
@@ -289,5 +308,49 @@ export const deleteAccount = async (req, res) => {
     } catch (error) {
         console.error('Error al eliminar cuenta:', error);
         res.status(500).json({ message: 'Error al eliminar cuenta' });
+    }
+};
+
+// Mejorar a Premium
+export const upgradeToPremiun = async (req, res) => {
+    try {
+        const userId = req.usuario.id;
+        const { cardNumber, cardName, cvv, expiryDate } = req.body;
+
+        // Validación (en producción aquí iría la integración con procesador de pagos)
+        if (!cardNumber || !cardName || !cvv || !expiryDate) {
+            return res.status(400).json({ 
+                message: 'Todos los datos de la tarjeta son requeridos' 
+            });
+        }
+
+        // Buscar usuario
+        const usuario = await Usuario.findById(userId);
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        // Verificar si ya es premium
+        if (usuario.tipoSuscripcion === 'premium') {
+            return res.status(400).json({ 
+                message: 'Ya tienes una suscripción Premium activa' 
+            });
+        }
+
+        // Actualizar a premium (simulamos que el pago siempre es exitoso)
+        usuario.tipoSuscripcion = 'premium';
+        await usuario.save();
+
+        // Devolver usuario sin password
+        const usuarioSinPassword = usuario.toObject();
+        delete usuarioSinPassword.password;
+
+        res.json({ 
+            message: '¡Felicidades! Ahora eres miembro Premium',
+            usuario: usuarioSinPassword
+        });
+    } catch (error) {
+        console.error('Error al mejorar a premium:', error);
+        res.status(500).json({ message: 'Error al procesar la actualización' });
     }
 };
