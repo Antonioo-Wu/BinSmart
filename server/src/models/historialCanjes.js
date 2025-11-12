@@ -21,6 +21,15 @@ const historialCanjesSchema = new mongoose.Schema({
   producto_servicio: {
     type: String,
     required: true
+  },
+  codigo: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  usado: {
+    type: Boolean,
+    default: false
   }
 });
 
