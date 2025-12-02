@@ -2,10 +2,91 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+// Sistema de 4 tachos específicos
+const binSystem = {
+  papel: { 
+    name: "Tacho de Papel", 
+    color: "#8B4513", 
+    icon: "document-outline",
+    keywords: ["paper", "cardboard", "papel", "carton", "cartón", "Papel", "Cartón"]
+  },
+  vidrio: { 
+    name: "Tacho de Vidrio", 
+    color: "#40E0D0", 
+    icon: "wine-outline",
+    keywords: ["glass", "vidrio", "Vidrio", "Glass"]
+  },
+  plastico: { 
+    name: "Tacho de Plástico", 
+    color: "#FF6B6B", 
+    icon: "water-outline",
+    keywords: ["plastic", "plastico", "plástico", "Plástico", "Plastic"]
+  },
+  organico: { 
+    name: "Tacho Orgánico", 
+    color: "#37b859", 
+    icon: "leaf-outline",
+    keywords: ["biological", "organico", "orgánico", "organic", "food", "comida", "Orgánico", "Biological"]
+  }
+};
+
+const getBinInfo = (classification) => {
+  const normalizedClassification = classification.toLowerCase();
+  
+  for (const [binKey, binInfo] of Object.entries(binSystem)) {
+    for (const keyword of binInfo.keywords) {
+      if (normalizedClassification.includes(keyword.toLowerCase())) {
+        console.log('Coincidencia encontrada:', keyword, '-> Tacho:', binInfo.name);
+        return {
+          category: getSpanishName(classification),
+          bin: binInfo.name,
+          color: binInfo.color,
+          icon: binInfo.icon
+        };
+      }
+    }
+  }
+  
+  console.log('❌ No se encontró coincidencia, usando basura general');
+  // Si no coincide con ningún tacho específico, va a basura general
+  return {
+    category: getSpanishName(classification),
+    bin: "Basura General",
+    color: "#666666",
+    icon: "trash-outline"
+  };
+};
+
+// Función para obtener el nombre en español de la categoría
+const getSpanishName = (classification) => {
+  const spanishNames = {
+    "cardboard": "Cartón",
+    "glass": "Vidrio", 
+    "metal": "Metal",
+    "paper": "Papel",
+    "plastic": "Plástico",
+    "biological": "Orgánico",
+    "organic": "Orgánico",
+    "trash": "Basura General",
+    // Nombres que ya vienen en español del modelo
+    "papel": "Papel",
+    "cartón": "Cartón",
+    "vidrio": "Vidrio",
+    "plástico": "Plástico",
+    "orgánico": "Orgánico"
+  };
+  
+  const normalized = classification.toLowerCase();
+  return spanishNames[normalized] || classification;
+};
+
 export function ScanResultScreen({ route, navigation }) {
   const { imageUri, classification, pointsEarned } = route.params;
   
-  const isGuestMode = route?.name === 'GuestScanResult';  
+  const isGuestMode = route?.name === 'GuestScanResult';
+  
+  // Obtener información del tacho correspondiente
+  const binInfo = getBinInfo(classification);
 
   const handleScanAgain = () => {
     if (isGuestMode) {
@@ -34,7 +115,18 @@ export function ScanResultScreen({ route, navigation }) {
 
       <View style={styles.resultCard}>
         <Text style={styles.categoryLabel}>Categoría:</Text>
-        <Text style={styles.categoryValue}>{classification}</Text>
+        <Text style={styles.categoryValue}>{binInfo.category}</Text>
+        
+        {/* Información del tacho */}
+        <View style={styles.binSection}>
+          <View style={styles.binHeader}>
+            <Ionicons name={binInfo.icon} size={24} color={binInfo.color} />
+            <Text style={styles.binTitle}>Depositar en:</Text>
+          </View>
+          <Text style={[styles.binValue, { color: binInfo.color }]}>
+            {binInfo.bin}
+          </Text>
+        </View>
         
         {pointsEarned && (
           <View style={styles.pointsSection}>
@@ -124,7 +216,29 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
     color: '#2c3e50',
+    marginBottom: 15,
+  },
+  binSection: {
     marginBottom: 20,
+    paddingTop: 15,
+    borderTopWidth: 1,
+    borderTopColor: '#ecf0f1',
+  },
+  binHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+    gap: 8,
+  },
+  binTitle: {
+    fontSize: 16,
+    color: '#7f8c8d',
+    fontWeight: '500',
+  },
+  binValue: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 32,
   },
   pointsSection: {
     marginTop: 20,

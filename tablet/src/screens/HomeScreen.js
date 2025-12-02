@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { FontAwesome6 } from '@expo/vector-icons';
 import { useUser } from '../context/UserContext';
 
@@ -11,6 +11,22 @@ export function HomeScreen({ navigation }) {
     navigation.navigate('GuestScan');
   };
 
+  const handleLogout = () => {
+    logout();
+    // Navegar al HomeScreen para mostrar las opciones de login
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Home' }],
+    });
+    
+    // Mostrar confirmación de logout
+    Alert.alert(
+      "Sesión Cerrada",
+      "La sesión se ha cerrado correctamente. Ahora puedes escanear un nuevo código QR para iniciar sesión con otro usuario.",
+      [{ text: "OK" }]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView 
@@ -20,14 +36,19 @@ export function HomeScreen({ navigation }) {
         <Text style={styles.title}>Bienvenido a BinSmart</Text>
         {userId && sessionActive ? (
           <>
-            <Text style={[styles.subtitle, styles.loggedIn]}>✓ Usuario autenticado - Listo para ganar puntos</Text>
+            <Text style={[styles.subtitle, styles.loggedIn]}>
+              ✓ Usuario autenticado - Listo para ganar puntos
+            </Text>
+            <Text style={styles.userInfo}>
+              ID de Usuario: {userId.substring(0, 8)}...
+            </Text>
             <TouchableOpacity
               style={[styles.button, styles.logoutButton]}
-              onPress={logout}
+              onPress={handleLogout}
             >
               <FontAwesome6 name="sign-out-alt" size={24} color="white" style={styles.buttonIcon} />
               <Text style={styles.buttonText}>Cerrar Sesión</Text>
-              <Text style={styles.buttonSubtext}>Volver al modo de selección</Text>
+              <Text style={styles.buttonSubtext}>Cambiar usuario o usar modo invitado</Text>
             </TouchableOpacity>
           </>
         ) : (
@@ -109,6 +130,12 @@ const styles = StyleSheet.create({
   loggedIn: {
     color: '#37b859',
     fontWeight: 'bold',
+  },
+  userInfo: {
+    fontSize: 14,
+    color: '#7f8c8d',
+    marginBottom: 20,
+    textAlign: 'center',
   },
   buttonText: {
     color: 'white',

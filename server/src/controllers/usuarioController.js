@@ -107,9 +107,10 @@ export const login = async (req, res) => {
 // Obtener perfil de usuario
 export const getPerfil = async (req, res) => {
     try {
-        //TODO
-        const usuario = await Usuario.findById(req.usuario.id).select('-password');
-        console.log(usuario);
+        const usuario = await Usuario.findById(req.usuario._id).select('-password');
+        if (!usuario) {
+            return res.status(404).json({ message: 'Usuario no encontrado' });
+        }
         res.json(usuario);
     } catch (error) {
         console.error('Error al obtener perfil:', error);

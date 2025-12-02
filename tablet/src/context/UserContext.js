@@ -37,6 +37,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const saveSession = (qrTokenValue, sessionJwtValue, userId) => {
+    // Limpiar datos de usuario anterior
+    setUserName(null);
+    setUserEmail(null);
+    setUserPoints(0);
+    setIsGuest(false);
+    
+    // Guardar nueva sesión
     setQrToken(qrTokenValue);
     setSessionJwt(sessionJwtValue);
     setSessionActive(true);
@@ -50,12 +57,17 @@ export const UserProvider = ({ children }) => {
   };
 
   const logout = () => {
+    // Limpiar todos los datos del usuario
     setUserId(null);
     setUserName(null);
     setUserEmail(null);
     setUserPoints(0);
     setIsGuest(false);
-    clearSession();
+    
+    // Limpiar sesión
+    setQrToken(null);
+    setSessionJwt(null);
+    setSessionActive(false);
   };
 
   return (

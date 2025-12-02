@@ -9,21 +9,24 @@ export function QRCodeScreen({ navigation }) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
-  const { saveSession } = useUser();
+  const { saveSession, clearSession } = useUser();
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setShowCamera(false);
     setIsProcessing(true);
     
     try {      
+      console.log('QR Data recibido:', data);
+      
       let qrData;
       try {
         qrData = JSON.parse(data);
+        console.log('QR Data parseado:', qrData);
       } catch (parseError) {
         console.error('Error parsing QR data:', parseError);
         Alert.alert(
           "QR Inválido",
-          "El código QR no tiene el formato correcto",
+          `El código QR no tiene el formato correcto. Datos recibidos: ${data.substring(0, 100)}...`,
           [
             {
               text: "Intentar de nuevo",
@@ -38,11 +41,12 @@ export function QRCodeScreen({ navigation }) {
       }
 
       const { qrToken, sessionJwt, userId } = qrData;
+      console.log('Datos extraídos del QR:', { qrToken, sessionJwt: sessionJwt ? 'presente' : 'ausente', userId });
 
       if (!qrToken || !sessionJwt || !userId) {
         Alert.alert(
           "QR Inválido", 
-          "El código QR no contiene toda la información necesaria (token, sesión o usuario)",
+          `El código QR no contiene toda la información necesaria.\nToken: ${qrToken ? 'OK' : 'FALTA'}\nSesión: ${sessionJwt ? 'OK' : 'FALTA'}\nUsuario: ${userId ? 'OK' : 'FALTA'}`,
           [
             {
               text: "Intentar de nuevo",
@@ -56,6 +60,8 @@ export function QRCodeScreen({ navigation }) {
         return;
       }
 
+      // Limpiar sesión anterior antes de guardar la nueva
+      clearSession();
       saveSession(qrToken, sessionJwt, userId);
       
       Alert.alert(

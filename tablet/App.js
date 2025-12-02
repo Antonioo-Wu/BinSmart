@@ -122,7 +122,7 @@ export default function App() {
           }}
         />
       </Stack.Navigator>
-    </NavigationContainer>
+      </NavigationContainer>
     </UserProvider>
   );
 }

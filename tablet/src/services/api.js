@@ -85,15 +85,8 @@ export const validateQrToken = async (qrToken, sessionJwt) => {
 };
 
 export const asignarPuntos = async (userId, points) => {
-  console.log(`📡 Enviando petición de puntos: URL=${baseURL}/api/usuarios/asignar-puntos/${userId}, points=${points}`);
-  try {
-    const response = await axios.post(`${baseURL}/api/usuarios/asignar-puntos/${userId}`, {
-      points
-    });
-    console.log(`📡 Respuesta del servidor:`, response.data);
-    return response.data;
-  } catch (error) {
-    console.error(`📡 Error en petición de puntos:`, error.response?.data || error.message);
-    throw error;
-  }
+  const response = await axios.post(`${baseURL}/api/usuarios/asignar-puntos/${userId}`, {
+    points
+  });
+  return response.data;
 };
