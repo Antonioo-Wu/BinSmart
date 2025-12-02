@@ -37,14 +37,12 @@ export function QRCodeScreen({ navigation }) {
         return;
       }
 
-      console.log(qrData)
-
       const { qrToken, sessionJwt, userId } = qrData;
 
-      if (!qrToken || !sessionJwt) {
+      if (!qrToken || !sessionJwt || !userId) {
         Alert.alert(
-          "QR Inválido",
-          "El código QR no contiene la información necesaria",
+          "QR Inválido", 
+          "El código QR no contiene toda la información necesaria (token, sesión o usuario)",
           [
             {
               text: "Intentar de nuevo",
@@ -59,14 +57,16 @@ export function QRCodeScreen({ navigation }) {
       }
 
       saveSession(qrToken, sessionJwt, userId);
-
-      setTimeout(() => {
-        navigation.replace('MainApp');
-      }, 1000);
       
       Alert.alert(
         "¡Sesión Iniciada!",
-        "El código QR ha sido escaneado correctamente.\nLa sesión se mantendrá activa."
+        "Usuario autenticado correctamente.\nAhora puedes escanear residuos para ganar puntos.",
+        [
+          {
+            text: "Continuar",
+            onPress: () => navigation.replace('MainApp')
+          }
+        ]
       );
     } catch (error) {
       console.error('❌ Error procesando QR:', error);
@@ -97,12 +97,12 @@ export function QRCodeScreen({ navigation }) {
   if (!permission?.granted) {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>We need camera permission to scan QR codes</Text>
+        <Text style={styles.text}>Necesitamos permiso de cámara para escanear códigos QR</Text>
         <TouchableOpacity
           style={styles.button}
           onPress={requestPermission}
         >
-          <Text style={styles.buttonText}>Grant Permission</Text>
+          <Text style={styles.buttonText}>Otorgar Permiso</Text>
         </TouchableOpacity>
       </View>
     );
@@ -154,7 +154,7 @@ export function QRCodeScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>No camera access</Text>
+      <Text style={styles.text}>Sin acceso a cámara</Text>
     </View>
   );
 }

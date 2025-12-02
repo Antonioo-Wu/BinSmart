@@ -122,6 +122,7 @@ export const asignPoints = async (req, res) => {
     try {
         const { userId } = req.params;
         const { points } = req.body;
+        
         const usuario = await Usuario.findById(userId);
         if (!usuario) {
             return res.status(404).json({ message: 'Usuario no encontrado' });

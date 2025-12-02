@@ -5,24 +5,24 @@ import { Ionicons } from '@expo/vector-icons';
 export function MetricsScreen() {
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.title}>ISO Compliance Metrics</Text>
-      <Text style={styles.subtitle}>Track waste management performance</Text>
+      <Text style={styles.title}>Métricas de Cumplimiento ISO</Text>
+      <Text style={styles.subtitle}>Seguimiento del rendimiento de gestión de residuos</Text>
 
       <View style={styles.diversionCard}>
         <View style={styles.diversionContent}>
           <View>
             <Text style={styles.diversionRate}>67%</Text>
-            <Text style={styles.metricLabel}>ISO 14001 Metric</Text>
+            <Text style={styles.metricLabel}>Métrica ISO 14001</Text>
           </View>
           <View style={styles.trendIcon}>
             <Ionicons name="trending-up" size={24} color="#3498db" />
           </View>
         </View>
-        <Text style={styles.diversionTitle}>Waste Diversion Rate</Text>
+        <Text style={styles.diversionTitle}>Tasa de Desvío de Residuos</Text>
       </View>
 
       <View style={styles.totalCard}>
-        <Text style={styles.totalTitle}>Total Items Scanned</Text>
+        <Text style={styles.totalTitle}>Total de Objetos Escaneados</Text>
         <Text style={styles.totalNumber}>42</Text>
       </View>
 
@@ -30,7 +30,7 @@ export function MetricsScreen() {
         <View style={[styles.gridItem, styles.recyclableCard]}>
           <Ionicons name="reload-circle" size={30} color="#3498db" />
           <Text style={styles.gridNumber}>18</Text>
-          <Text style={[styles.gridLabel, styles.recyclableText]}>Recyclable</Text>
+          <Text style={[styles.gridLabel, styles.recyclableText]}>Reciclable</Text>
         </View>
 
         <View style={[styles.gridItem, styles.compostCard]}>
@@ -42,29 +42,29 @@ export function MetricsScreen() {
         <View style={[styles.gridItem, styles.trashCard]}>
           <Ionicons name="trash" size={30} color="#95a5a6" />
           <Text style={styles.gridNumber}>12</Text>
-          <Text style={[styles.gridLabel, styles.trashText]}>Trash</Text>
+          <Text style={[styles.gridLabel, styles.trashText]}>Basura</Text>
         </View>
 
         <View style={[styles.gridItem, styles.hazardousCard]}>
           <Ionicons name="warning" size={30} color="#e74c3c" />
           <Text style={styles.gridNumber}>2</Text>
-          <Text style={[styles.gridLabel, styles.hazardousText]}>Hazardous</Text>
+          <Text style={[styles.gridLabel, styles.hazardousText]}>Peligroso</Text>
         </View>
       </View>
 
       <View style={styles.guidelinesCard}>
-        <Text style={styles.guidelinesTitle}>ISO 14001 Guidelines</Text>
+        <Text style={styles.guidelinesTitle}>Guías ISO 14001</Text>
         <View style={styles.guidelineItem}>
           <Ionicons name="checkmark" size={20} color="#3498db" />
-          <Text style={styles.guidelineText}>Track waste separation accuracy</Text>
+          <Text style={styles.guidelineText}>Controlar la precisión en la separación de residuos</Text>
         </View>
         <View style={styles.guidelineItem}>
           <Ionicons name="checkmark" size={20} color="#3498db" />
-          <Text style={styles.guidelineText}>Monitor diversion rates monthly</Text>
+          <Text style={styles.guidelineText}>Monitorear las tasas de desvío mensualmente</Text>
         </View>
         <View style={styles.guidelineItem}>
           <Ionicons name="checkmark" size={20} color="#3498db" />
-          <Text style={styles.guidelineText}>Document hazardous waste handling</Text>
+          <Text style={styles.guidelineText}>Documentar el manejo de residuos peligrosos</Text>
         </View>
       </View>
     </ScrollView>

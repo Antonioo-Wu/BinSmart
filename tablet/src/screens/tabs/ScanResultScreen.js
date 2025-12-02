@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 
 export function ScanResultScreen({ route, navigation }) {
-  const { imageUri, classification } = route.params;
+  const { imageUri, classification, pointsEarned } = route.params;
   
   const isGuestMode = route?.name === 'GuestScanResult';  
 
@@ -35,6 +35,19 @@ export function ScanResultScreen({ route, navigation }) {
       <View style={styles.resultCard}>
         <Text style={styles.categoryLabel}>Categoría:</Text>
         <Text style={styles.categoryValue}>{classification}</Text>
+        
+        {pointsEarned && (
+          <View style={styles.pointsSection}>
+            <View style={styles.pointsHeader}>
+              <Ionicons name="star" size={24} color="#FFD700" />
+              <Text style={styles.pointsTitle}>¡Puntos Ganados!</Text>
+            </View>
+            <Text style={styles.pointsValue}>+{pointsEarned} puntos</Text>
+            <Text style={styles.pointsSubtext}>
+              Gracias por ayudar al medio ambiente
+            </Text>
+          </View>
+        )}
       </View>
 
       <View style={styles.buttonContainer}>
@@ -43,7 +56,7 @@ export function ScanResultScreen({ route, navigation }) {
           onPress={handleScanAgain}
         >
           <Ionicons name="camera-outline" size={24} color="white" style={styles.buttonIcon} />
-          <Text style={styles.scanAgainText}>Scan Another Item</Text>
+          <Text style={styles.scanAgainText}>Escanear Otro Objeto</Text>
         </TouchableOpacity>
         
         {isGuestMode && (
@@ -52,7 +65,7 @@ export function ScanResultScreen({ route, navigation }) {
             onPress={handleGoHome}
           >
             <Ionicons name="home-outline" size={24} color="#37b859" style={styles.buttonIcon} />
-            <Text style={styles.homeButtonText}>Back to Home</Text>
+            <Text style={styles.homeButtonText}>Volver al Inicio</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -112,6 +125,36 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#2c3e50',
     marginBottom: 20,
+  },
+  pointsSection: {
+    marginTop: 20,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#ecf0f1',
+    alignItems: 'center',
+  },
+  pointsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  pointsTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#2c3e50',
+    marginLeft: 8,
+  },
+  pointsValue: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#37b859',
+    marginBottom: 5,
+  },
+  pointsSubtext: {
+    fontSize: 14,
+    color: '#7f8c8d',
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
   confidencesSection: {
     marginTop: 10,

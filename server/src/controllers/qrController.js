@@ -15,6 +15,6 @@ export const generateQrToken = (req, res) => {
     };
 
     const sessionJwt = req.token;
-    res.json({ qrToken, sessionJwt });
+    res.json({ qrToken, sessionJwt, userId });
 };
 

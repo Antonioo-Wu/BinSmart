@@ -6,8 +6,8 @@ export function LoadingScreen() {
     <View style={styles.container}>
       <View style={styles.card}>
         <ActivityIndicator size="large" color="#3498db" style={styles.spinner} />
-        <Text style={styles.title}>Analyzing Item...</Text>
-        <Text style={styles.subtitle}>Please wait while we identify your item</Text>
+        <Text style={styles.title}>Analizando Residuo...</Text>
+        <Text style={styles.subtitle}>Por favor espera mientras identificamos tu objeto</Text>
       </View>
     </View>
   );

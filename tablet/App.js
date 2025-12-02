@@ -82,11 +82,11 @@ export default function App() {
               screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
                   let iconName;
-                  if (route.name === 'Scan') {
+                  if (route.name === 'Escanear') {
                     iconName = focused ? 'recycle' : 'recycle';
-                  } else if (route.name === 'Metrics') {
+                  } else if (route.name === 'Métricas') {
                     iconName = focused ? 'chart-column' : 'chart-column';
-                  } else if (route.name === 'History') {
+                  } else if (route.name === 'Historial') {
                     iconName = focused ? 'clock-four' : 'clock-four';
                   }
                   return <FontAwesome6 name={iconName} size={size} color={color} />;
@@ -96,9 +96,9 @@ export default function App() {
                 headerShown: false,
               })}
             >
-              <Tab.Screen name="Scan" component={ScanStackScreen} />
-              <Tab.Screen name="Metrics" component={MetricsScreen} />
-              <Tab.Screen name="History" component={HistoryScreen} />
+              <Tab.Screen name="Escanear" component={ScanStackScreen} />
+              <Tab.Screen name="Métricas" component={MetricsScreen} />
+              <Tab.Screen name="Historial" component={HistoryScreen} />
             </Tab.Navigator>
           )}
         </Stack.Screen>
@@ -108,7 +108,7 @@ export default function App() {
           name="GuestScan"
           component={ScanScreen}
           options={{
-            title: 'Scan Item - Guest Mode',
+            title: 'Escanear - Modo Invitado',
             headerTintColor: '#37b859',
           }}
         />

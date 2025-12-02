@@ -32,7 +32,7 @@ export function HistoryScreen() {
         setError('Error al cargar el historial');
       }
     } catch (err) {
-      console.error('Error fetching history:', err);
+      console.error('Error obteniendo historial:', err);
       setError('No se pudo conectar con el servidor');
     } finally {
       setLoading(false);
