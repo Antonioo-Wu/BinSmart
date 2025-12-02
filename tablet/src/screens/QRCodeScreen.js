@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, StatusBar, ActivityIndicator } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Ionicons } from '@expo/vector-icons';
@@ -163,8 +163,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#000',
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   cameraContainer: {
     flex: 1,
@@ -179,7 +177,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    pointerEvents: 'box-none',
   },
   closeButton: {
     position: 'absolute',
@@ -189,11 +187,17 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 25,
     zIndex: 1,
+    pointerEvents: 'auto',
   },
   scanArea: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
+    pointerEvents: 'none',
   },
   scanFrame: {
     width: 250,
@@ -212,6 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.7)',
     padding: 10,
     borderRadius: 5,
+    pointerEvents: 'none',
   },
   text: {
     color: 'white',
