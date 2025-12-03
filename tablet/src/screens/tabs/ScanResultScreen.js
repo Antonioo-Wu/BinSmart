@@ -101,67 +101,76 @@ export function ScanResultScreen({ route, navigation }) {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      <Image 
-        source={{ uri: imageUri }}
-        style={styles.image}
-        resizeMode="contain"
-      />
+    <View style={styles.container}>
+      <View style={styles.contentContainer}>
+        <Image 
+          source={{ uri: imageUri }}
+          style={styles.image}
+          resizeMode="contain"
+        />
 
-      <View style={styles.successHeader}>
-        <Ionicons name="checkmark-circle" size={30} color="#37b859" />
-        <Text style={styles.successText}>¡Item identificado exitosamente!</Text>
-      </View>
-
-      <View style={styles.resultCard}>
-        <Text style={styles.categoryLabel}>Categoría:</Text>
-        <Text style={styles.categoryValue}>{binInfo.category}</Text>
-        
-        {/* Información del tacho */}
-        <View style={styles.binSection}>
-          <View style={styles.binHeader}>
-            <Ionicons name={binInfo.icon} size={24} color={binInfo.color} />
-            <Text style={styles.binTitle}>Depositar en:</Text>
-          </View>
-          <Text style={[styles.binValue, { color: binInfo.color }]}>
-            {binInfo.bin}
-          </Text>
+        <View style={styles.successHeader}>
+          <Ionicons name="checkmark-circle" size={30} color="#37b859" />
+          <Text style={styles.successText}>¡Item identificado exitosamente!</Text>
         </View>
-        
-        {pointsEarned && (
-          <View style={styles.pointsSection}>
-            <View style={styles.pointsHeader}>
-              <Ionicons name="star" size={24} color="#FFD700" />
-              <Text style={styles.pointsTitle}>¡Puntos Ganados!</Text>
-            </View>
-            <Text style={styles.pointsValue}>+{pointsEarned} puntos</Text>
-            <Text style={styles.pointsSubtext}>
-              Gracias por ayudar al medio ambiente
-            </Text>
-          </View>
-        )}
-      </View>
 
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity 
-          style={styles.scanAgainButton}
-          onPress={handleScanAgain}
-        >
-          <Ionicons name="camera-outline" size={24} color="white" style={styles.buttonIcon} />
-          <Text style={styles.scanAgainText}>Escanear Otro Objeto</Text>
-        </TouchableOpacity>
-        
-        {isGuestMode && (
-          <TouchableOpacity 
-            style={styles.homeButton}
-            onPress={handleGoHome}
-          >
-            <Ionicons name="home-outline" size={24} color="#37b859" style={styles.buttonIcon} />
-            <Text style={styles.homeButtonText}>Volver al Inicio</Text>
-          </TouchableOpacity>
-        )}
+        {/* Two-column layout */}
+        <View style={styles.twoColumnContainer}>
+          {/* Left Column - Information */}
+          <View style={styles.leftColumn}>
+            <View style={styles.resultCard}>
+              <Text style={styles.categoryLabel}>Categoría:</Text>
+              <Text style={styles.categoryValue}>{binInfo.category}</Text>
+              
+              {/* Información del tacho */}
+              <View style={styles.binSection}>
+                <View style={styles.binHeader}>
+                  <Ionicons name={binInfo.icon} size={24} color={binInfo.color} />
+                  <Text style={styles.binTitle}>Depositar en:</Text>
+                </View>
+                <Text style={[styles.binValue, { color: binInfo.color }]}>
+                  {binInfo.bin}
+                </Text>
+              </View>
+              
+              {pointsEarned && (
+                <View style={styles.pointsSection}>
+                  <View style={styles.pointsHeader}>
+                    <Ionicons name="star" size={24} color="#FFD700" />
+                    <Text style={styles.pointsTitle}>¡Puntos Ganados!</Text>
+                  </View>
+                  <Text style={styles.pointsValue}>+{pointsEarned} puntos</Text>
+                  <Text style={styles.pointsSubtext}>
+                    Gracias por ayudar al medio ambiente
+                  </Text>
+                </View>
+              )}
+            </View>
+          </View>
+
+          {/* Right Column - Action Buttons */}
+          <View style={styles.rightColumn}>
+            <TouchableOpacity 
+              style={styles.scanAgainButton}
+              onPress={handleScanAgain}
+            >
+              <Ionicons name="camera-outline" size={32} color="white" style={styles.buttonIcon} />
+              <Text style={styles.scanAgainText}>Escanear Otro Objeto</Text>
+            </TouchableOpacity>
+            
+            {isGuestMode && (
+              <TouchableOpacity 
+                style={styles.homeButton}
+                onPress={handleGoHome}
+              >
+                <Ionicons name="home-outline" size={32} color="#37b859" style={styles.buttonIcon} />
+                <Text style={styles.homeButtonText}>Volver al Inicio</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
@@ -171,13 +180,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
   },
   contentContainer: {
+    flex: 1,
     padding: 20,
     paddingHorizontal: 100,
-    flexGrow: 1,
   },
   image: {
     width: '100%',
-    height: 200,
+    height: 180,
     marginBottom: 20,
     borderRadius: 15,
     backgroundColor: 'white',
@@ -193,11 +202,23 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#37b859',
   },
+  twoColumnContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    gap: 20,
+  },
+  leftColumn: {
+    flex: 1,
+  },
+  rightColumn: {
+    width: 280,
+    gap: 15,
+    justifyContent: 'center',
+  },
   resultCard: {
     backgroundColor: 'white',
     borderRadius: 15,
-    padding: 25,
-    marginBottom: 20,
+    padding: 20,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -208,41 +229,41 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   categoryLabel: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#7f8c8d',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   categoryValue: {
-    fontSize: 32,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#2c3e50',
-    marginBottom: 15,
+    marginBottom: 12,
   },
   binSection: {
-    marginBottom: 20,
-    paddingTop: 15,
+    marginBottom: 15,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: '#ecf0f1',
   },
   binHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    gap: 8,
+    marginBottom: 6,
+    gap: 6,
   },
   binTitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#7f8c8d',
     fontWeight: '500',
   },
   binValue: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    marginLeft: 32,
+    marginLeft: 26,
   },
   pointsSection: {
-    marginTop: 20,
-    paddingTop: 20,
+    marginTop: 15,
+    paddingTop: 15,
     borderTopWidth: 1,
     borderTopColor: '#ecf0f1',
     alignItems: 'center',
@@ -250,22 +271,22 @@ const styles = StyleSheet.create({
   pointsHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 8,
   },
   pointsTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
     color: '#2c3e50',
     marginLeft: 8,
   },
   pointsValue: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#37b859',
-    marginBottom: 5,
+    marginBottom: 4,
   },
   pointsSubtext: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#7f8c8d',
     textAlign: 'center',
     fontStyle: 'italic',
@@ -302,40 +323,51 @@ const styles = StyleSheet.create({
     color: '#37b859',
     fontWeight: 'bold',
   },
-  buttonContainer: {
-    marginTop: 20,
-    gap: 15,
-    paddingBottom: 20,
-  },
   scanAgainButton: {
     backgroundColor: '#37b859',
     borderRadius: 15,
-    padding: 20,
-    flexDirection: 'row',
+    padding: 40,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   scanAgainText: {
     color: 'white',
     fontSize: 18,
     fontWeight: '600',
+    textAlign: 'center',
   },
   homeButton: {
     backgroundColor: 'white',
     borderRadius: 15,
-    padding: 20,
-    flexDirection: 'row',
+    padding: 25,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#37b859',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 3,
   },
   homeButtonText: {
     fontSize: 18,
     fontWeight: '600',
     color: '#37b859',
+    textAlign: 'center',
   },
   buttonIcon: {
-    marginRight: 10,
+    marginBottom: 8,
   },
 });

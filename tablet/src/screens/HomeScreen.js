@@ -42,14 +42,24 @@ export function HomeScreen({ navigation }) {
             <Text style={styles.userInfo}>
               ID de Usuario: {userId.substring(0, 8)}...
             </Text>
-            <TouchableOpacity
-              style={[styles.button, styles.logoutButton]}
-              onPress={handleLogout}
-            >
-              <FontAwesome6 name="sign-out-alt" size={24} color="white" style={styles.buttonIcon} />
-              <Text style={styles.buttonText}>Cerrar Sesión</Text>
-              <Text style={styles.buttonSubtext}>Cambiar usuario o usar modo invitado</Text>
-            </TouchableOpacity>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[styles.button, styles.scanButton]}
+                onPress={() => navigation.navigate('MainApp')}
+              >
+                <FontAwesome6 name="camera" size={24} color="white" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Continuar Escaneando</Text>
+                <Text style={styles.buttonSubtext}>Escanea objetos y gana puntos</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.button, styles.logoutButton]}
+                onPress={handleLogout}
+              >
+                <FontAwesome6 name="right-from-bracket" size={24} color="white" style={styles.buttonIcon} />
+                <Text style={styles.buttonText}>Cerrar Sesión</Text>
+                <Text style={styles.buttonSubtext}>Cambiar usuario o usar modo invitado</Text>
+              </TouchableOpacity>
+            </View>
           </>
         ) : (
           <>
@@ -121,6 +131,9 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   loginButton: {
+    backgroundColor: '#37b859',
+  },
+  scanButton: {
     backgroundColor: '#37b859',
   },
   logoutButton: {

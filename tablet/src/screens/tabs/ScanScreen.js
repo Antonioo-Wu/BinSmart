@@ -76,19 +76,10 @@ export function ScanScreen({ navigation, route }) {
             
             asignarPuntos(userId, puntosGanados)
               .then(() => {
-                Alert.alert(
-                  "¡Puntos Ganados!",
-                  `Has ganado ${puntosGanados} puntos por reciclar ${label}`,
-                  [{ text: "¡Genial!" }]
-                );
+                console.log(`Puntos asignados: ${puntosGanados}`);
               })
               .catch(err => {
                 console.error('Error asignando puntos:', err);
-                Alert.alert(
-                  "Error",
-                  "No se pudieron asignar los puntos. Verifica tu conexión.",
-                  [{ text: "OK" }]
-                );
               });
 
             // Navegar con los puntos ganados

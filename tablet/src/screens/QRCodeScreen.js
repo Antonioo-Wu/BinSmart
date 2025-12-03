@@ -7,9 +7,14 @@ import { useUser } from '../context/UserContext';
 export function QRCodeScreen({ navigation }) {
   const [showCamera, setShowCamera] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [facing, setFacing] = useState('front');
   const [permission, requestPermission] = useCameraPermissions();
   const cameraRef = useRef(null);
   const { saveSession, clearSession } = useUser();
+
+  const toggleCameraFacing = () => {
+    setFacing(current => (current === 'back' ? 'front' : 'back'));
+  };
 
   const handleBarCodeScanned = async ({ type, data }) => {
     setShowCamera(false);
@@ -133,7 +138,7 @@ export function QRCodeScreen({ navigation }) {
           <CameraView
             ref={cameraRef}
             style={styles.camera}
-            facing="back"
+            facing={facing}
             onBarcodeScanned={handleBarCodeScanned}
             barcodeScannerSettings={{
               barcodeTypes: ["qr"]
@@ -145,6 +150,12 @@ export function QRCodeScreen({ navigation }) {
               onPress={() => navigation.goBack()}
             >
               <Ionicons name="close" size={30} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.flipButton}
+              onPress={toggleCameraFacing}
+            >
+              <Ionicons name="camera-reverse" size={30} color="white" />
             </TouchableOpacity>
             <View style={styles.scanArea}>
               <View style={styles.scanFrame} />
@@ -189,6 +200,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 40,
     right: 20,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 10,
+    borderRadius: 25,
+    zIndex: 1,
+    pointerEvents: 'auto',
+  },
+  flipButton: {
+    position: 'absolute',
+    top: 40,
+    left: 20,
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 10,
     borderRadius: 25,
